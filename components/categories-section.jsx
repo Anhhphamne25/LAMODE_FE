@@ -1,49 +1,41 @@
-"use client";
+"use client"
 
-import CategoryCard from "./category-card";
+import CategoryCard from "./category-card"
 
 const categories = [
   {
-    name: "Xuân",
-    image: "/spring.jpg",
+    name: "Women",
+    image: "/womens-fashion-clothing.jpg",
   },
   {
-    name: "Hạ",
-    image: "/summer.jpg",
+    name: "Men",
+    image: "/mens-fashion-clothing.jpg",
   },
   {
-    name: "Thu",
-    image: "/fall.jpg",
+    name: "Accessories",
+    image: "/fashion-accessories.jpg",
   },
   {
-    name: "Đông",
-    image: "/winter.jpg",
+    name: "Shoes",
+    image: "/designer-shoes.jpg",
   },
-];
+]
 
 export default function CategoriesSection() {
   return (
     <section className="py-20 px-4 md:px-8 lg:px-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Thời trang theo mùa
-          </h2>
-          <p className="text-foreground/60 text-lg max-w-2xl">
-            Khám phá thời trang theo từng mùa trong năm.
-          </p>
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Shop by Category</h2>
+          <p className="text-foreground/60 text-lg max-w-2xl">Explore our curated collections across all categories.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {categories.map((category) => (
-            <CategoryCard
-              key={category.name}
-              name={category.name}
-              image={category.image}
-            />
+            <CategoryCard key={category.name} name={category.name} image={category.image} />
           ))}
         </div>
       </div>
     </section>
-  );
+  )
 }

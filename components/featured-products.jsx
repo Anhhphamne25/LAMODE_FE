@@ -1,6 +1,7 @@
-"use client";
+"use client"
 
-import ProductCard from "./product-card";
+import ProductCard from "./product-card"
+import Link from "next/link"
 
 const products = [
   {
@@ -61,7 +62,7 @@ const products = [
     badge: "New",
     badgeType: "new",
   },
-];
+]
 
 export default function FeaturedProducts() {
   return (
@@ -69,16 +70,15 @@ export default function FeaturedProducts() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-12">
           <div className="fade-in-up">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Sản phẩm nổi bật
-            </h2>
-            <p className="text-foreground/60 text-lg max-w-2xl">
-              Các sản phẩm nổi bật của chúng tôi.
-            </p>
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Featured Products</h2>
+            <p className="text-foreground/60 text-lg max-w-2xl">Discover our best-selling and newly arrived pieces.</p>
           </div>
-          <button className="hidden md:block text-primary hover:text-primary/80 font-semibold transition-all duration-300 hover:scale-105">
-            Xem Thêm →
-          </button>
+          <Link
+            href="/products"
+            className="hidden md:block text-primary hover:text-primary/80 font-semibold transition-all duration-300 hover:scale-105"
+          >
+            View All →
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -91,6 +91,7 @@ export default function FeaturedProducts() {
               }}
             >
               <ProductCard
+                id={product.id}
                 name={product.name}
                 price={product.price}
                 image={product.image}
@@ -102,11 +103,11 @@ export default function FeaturedProducts() {
         </div>
 
         <div className="mt-12 flex justify-center md:hidden">
-          <button className="text-primary hover:text-primary/80 font-semibold transition-colors">
+          <Link href="/products" className="text-primary hover:text-primary/80 font-semibold transition-colors">
             View All Products →
-          </button>
+          </Link>
         </div>
       </div>
     </section>
-  );
+  )
 }

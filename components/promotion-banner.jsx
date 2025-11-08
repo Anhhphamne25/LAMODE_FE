@@ -1,21 +1,21 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react"
+import { ChevronRight } from "lucide-react"
 
 export default function PromotionBanner() {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const threshold = 300;
-      setIsVisible(scrollY > threshold);
-    };
+      const scrollY = window.scrollY
+      const threshold = 300
+      setIsVisible(scrollY > threshold)
+    }
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   return (
     <section
@@ -30,22 +30,19 @@ export default function PromotionBanner() {
               <p className="text-primary-foreground/80 text-sm font-semibold uppercase tracking-wider mb-3">
                 Limited Time Offer
               </p>
-              <h3 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-3">
-                Fall -Winter Collection
-              </h3>
+              <h3 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-3">Summer Collection</h3>
               <p className="text-primary-foreground/90 text-lg mb-6 max-w-md">
-                Get up to 40% off on selected items. Don't miss out on this
-                exclusive offer.
+                Get up to 40% off on selected items. Don't miss out on this exclusive offer.
               </p>
               <button className="inline-flex items-center gap-2 bg-primary-foreground text-primary font-semibold px-6 py-3 rounded-lg hover:bg-primary-foreground/90 transition-all duration-300 hover:scale-105 group">
-                Xem Ngay
+                Shop Now
                 <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
             <div className="flex-1 hidden md:block">
               <img
-                src="/saleee.png"
-                alt="Winter Collection"
+                src="/summer-collection-clothing.jpg"
+                alt="Summer Collection"
                 className="w-full h-auto object-cover rounded-lg"
               />
             </div>
@@ -53,5 +50,5 @@ export default function PromotionBanner() {
         </div>
       </div>
     </section>
-  );
+  )
 }
