@@ -1,35 +1,36 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { Menu, X, Search, ShoppingCart, User } from "lucide-react";
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import { Menu, X, Search, ShoppingCart, User } from "lucide-react"
+import { useCart } from "@/contexts/cart-context"
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const { getCartCount } = useCart()
+  const cartCount = getCartCount()
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+      setIsScrolled(window.scrollY > 10)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   const menuItems = [
     { label: "Home", href: "/" },
-    { label: "Products", href: "/product" },
-    { label: "Album", href: "/album" },
+    { label: "Products", href: "/products" },
+    { label: "Blog", href: "/blog" },
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
-  ];
+  ]
 
   return (
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-background/95 backdrop-blur-sm shadow-sm"
-          : "bg-background"
+        isScrolled ? "bg-background/95 backdrop-blur-sm shadow-sm" : "bg-background"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
@@ -37,7 +38,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 group">
             <div className="text-xl font-bold text-primary group-hover:text-primary/80 transition-colors duration-300">
-              LAMODE
+              LUX
             </div>
           </Link>
 
@@ -67,21 +68,25 @@ export default function Header() {
             </div>
 
             {/* Icons */}
-            <Link href="/product">
-              <button className="p-2 hover:bg-muted rounded-lg transition-all duration-200 hover:scale-110 group">
-                <Search className="w-5 h-5 text-foreground group-hover:text-primary transition-colors" />
-              </button>
+            <button className="p-2 hover:bg-muted rounded-lg transition-all duration-200 hover:scale-110 group">
+              <Search className="w-5 h-5 text-foreground group-hover:text-primary transition-colors" />
+            </button>
+            <Link
+              href="/cart"
+              className="p-2 hover:bg-muted rounded-lg transition-all duration-200 hover:scale-110 group relative"
+            >
+              <ShoppingCart className="w-5 h-5 text-foreground group-hover:text-primary transition-colors" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent text-accent-foreground text-xs rounded-full flex items-center justify-center font-semibold">
+                  {cartCount}
+                </span>
+              )}
             </Link>
-            <Link href="/cart">
-              <button className="p-2 hover:bg-muted rounded-lg transition-all duration-200 hover:scale-110 group relative">
-                <ShoppingCart className="w-5 h-5 text-foreground group-hover:text-primary transition-colors" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full animate-pulse"></span>
-              </button>
-            </Link>
-            <Link href="/profile">
-              <button className="p-2 hover:bg-muted rounded-lg transition-all duration-200 hover:scale-110 group">
-                <User className="w-5 h-5 text-foreground group-hover:text-primary transition-colors" />
-              </button>
+            <Link
+              href="/account"
+              className="p-2 hover:bg-muted rounded-lg transition-all duration-200 hover:scale-110 group"
+            >
+              <User className="w-5 h-5 text-foreground group-hover:text-primary transition-colors" />
             </Link>
 
             {/* Mobile Menu Button */}
@@ -89,11 +94,7 @@ export default function Header() {
               className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors duration-200"
               onClick={() => setIsOpen(!isOpen)}
             >
-              {isOpen ? (
-                <X className="w-5 h-5 text-foreground" />
-              ) : (
-                <Menu className="w-5 h-5 text-foreground" />
-              )}
+              {isOpen ? <X className="w-5 h-5 text-foreground" /> : <Menu className="w-5 h-5 text-foreground" />}
             </button>
           </div>
         </div>
@@ -115,5 +116,5 @@ export default function Header() {
         )}
       </div>
     </header>
-  );
+  )
 }

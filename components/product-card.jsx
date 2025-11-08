@@ -1,17 +1,40 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { ShoppingCart, Heart } from "lucide-react"
+import { useCart } from "@/contexts/cart-context"
 import { Button } from "@/components/ui/button"
 
-export default function ProductCard({ name, price, image, badge, badgeType = "new" }) {
+export default function ProductCard({ id, name, price, image, badge, badgeType = "new" }) {
+  const { addToCart, addToWishlist, isInWishlist } = useCart()
   const [isHovered, setIsHovered] = useState(false)
-  const [isWishlisted, setIsWishlisted] = useState(false)
+  const [addedToCart, setAddedToCart] = useState(false)
 
   const badgeColor = badgeType === "sale" ? "bg-accent text-accent-foreground" : "bg-primary text-primary-foreground"
 
+  const handleAddToCart = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    addToCart({
+      id,
+      name,
+      price,
+      image,
+      size: "M",
+    })
+    setAddedToCart(true)
+    setTimeout(() => setAddedToCart(false), 2000)
+  }
+
+  const handleWishlist = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    addToWishlist({ id, name, price, image })
+  }
+
   return (
-    <div className="group card-lift">
+    <Link href={`/products/${id}`} className="group card-lift block">
       <div
         className="relative overflow-hidden rounded-lg mb-4 bg-muted cursor-pointer"
         onMouseEnter={() => setIsHovered(true)}
@@ -36,29 +59,32 @@ export default function ProductCard({ name, price, image, badge, badgeType = "ne
           </div>
         )}
 
-        {/* Card Lift Effect & Button */}
+        {/* Add to Cart Overlay */}
         <div
           className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
             isHovered ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
           <div className="bg-black/20 backdrop-blur-sm rounded-lg p-4 animate-in fade-in">
-            <Button className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold gap-2 group hover:scale-105 transition-transform">
+            <Button
+              onClick={handleAddToCart}
+              className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold gap-2 group hover:scale-105 transition-transform"
+            >
               <ShoppingCart className="w-4 h-4" />
-              Add to Cart
+              {addedToCart ? "Added!" : "Add to Cart"}
             </Button>
           </div>
         </div>
 
         {/* Wishlist Button */}
         <button
-          onClick={() => setIsWishlisted(!isWishlisted)}
+          onClick={handleWishlist}
           className={`absolute top-4 left-4 p-2 rounded-full transition-all duration-300 hover:scale-110 ${
-            isWishlisted ? "bg-accent text-accent-foreground" : "bg-white/90 hover:bg-white text-foreground"
+            isInWishlist(id) ? "bg-accent text-accent-foreground" : "bg-white/90 hover:bg-white text-foreground"
           }`}
           title="Add to wishlist"
         >
-          <Heart className={`w-5 h-5 ${isWishlisted ? "fill-current" : ""}`} />
+          <Heart className={`w-5 h-5 ${isInWishlist(id) ? "fill-current" : ""}`} />
         </button>
       </div>
 
@@ -69,6 +95,6 @@ export default function ProductCard({ name, price, image, badge, badgeType = "ne
         </h3>
         <p className="text-lg font-bold text-primary mt-2">${price.toFixed(2)}</p>
       </div>
-    </div>
+    </Link>
   )
 }

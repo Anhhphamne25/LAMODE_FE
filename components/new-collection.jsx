@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import Carousel from "./carousel";
+import Carousel from "./carousel"
 
 const newCollectionItems = [
   {
@@ -47,16 +47,16 @@ const newCollectionItems = [
     price: 139.99,
     image: "/placeholder.svg?key=loafers131",
   },
-];
+]
 
 export default function NewCollection() {
   return (
     <Carousel
       items={newCollectionItems}
-      title="Sản phẩm mới về"
-      description="Sản phẩm mới nhất vừa được thêm vào cửa hàng của chúng tôi."
+      title="New Arrivals"
+      description="Discover fresh styles just added to our collection"
       autoScroll={true}
       autoScrollInterval={6000}
     />
-  );
+  )
 }
