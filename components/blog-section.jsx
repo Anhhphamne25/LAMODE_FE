@@ -1,43 +1,49 @@
-"use client"
+"use client";
 
-import BlogCard from "./blog-card"
+import BlogCard from "./blog-card";
+import Link from "next/link";
 
 const blogPosts = [
   {
     id: 1,
-    image: "/placeholder.svg?key=fashion_tips_2024",
-    title: "2024 Fashion Trends: What's Hot This Season",
+    image: "/blog1.jpg",
+    title: "Shop thời trang LAMODE thống lĩnh thị trường",
     excerpt:
-      "Discover the latest fashion trends dominating the runway and streets. From bold colors to timeless classics.",
-    date: "November 2024",
+      "Gần đây những xu hướng thời trang mới nhất đã xuất hiện, mang đến cho người tiêu dùng nhiều lựa chọn phong cách và sáng tạo hơn bao giờ hết.",
+    date: "November 2025",
     category: "Fashion",
   },
   {
     id: 2,
-    image: "/placeholder.svg?key=sustainable_fashion",
-    title: "Sustainable Fashion: Investing in Quality Over Quantity",
-    excerpt: "Learn how to build a sustainable wardrobe by choosing quality pieces that last longer and reduce waste.",
-    date: "October 2024",
+    image: "/blog2.jpg",
+    title: "Thời trang bền vững: Đầu tư vào chất lượng thay vì số lượng",
+    excerpt:
+      "Tìm hiểu cách xây dựng tủ quần áo bền vững bằng cách chọn những món đồ chất lượng, bền lâu và giảm thiểu lãng phí.",
+    date: "October 2025",
     category: "Lifestyle",
   },
   {
     id: 3,
-    image: "/placeholder.svg?key=styling_guide",
-    title: "The Ultimate Styling Guide for Every Body Type",
-    excerpt: "Expert tips on how to dress for your body type and create flattering looks that make you feel confident.",
-    date: "September 2024",
+    image: "/blog3.jpg",
+    title: "Hướng dẫn phong cách tối ưu cho mọi dáng người",
+    excerpt:
+      "Mẹo chuyên gia về cách ăn mặc phù hợp với dáng người của bạn và tạo ra những phong cách tôn lên sự tự tin.",
+    date: "September 2025",
     category: "Style Tips",
   },
-]
+];
 
 export default function BlogSection() {
   return (
     <section className="py-20 px-4 md:px-8 lg:px-12 bg-background">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Fashion & Lifestyle</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+            Thời trang & Lối sống
+          </h2>
           <p className="text-foreground/60 text-lg max-w-2xl">
-            Explore our latest articles on fashion, style tips, and lifestyle insights.
+            Khám phá những bài viết mới nhất về thời trang, mẹo phong cách và
+            những hiểu biết về lối sống.
           </p>
         </div>
 
@@ -56,11 +62,13 @@ export default function BlogSection() {
 
         {/* View All Button */}
         <div className="flex justify-center mt-12">
-          <button className="px-8 py-3 border-2 border-primary text-primary font-semibold rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105">
-            View All Articles
-          </button>
+          <Link href="/blog">
+            <button className="px-8 py-3 border-2 border-primary text-primary font-semibold rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105">
+              Xem tất cả bài viết
+            </button>
+          </Link>
         </div>
       </div>
     </section>
-  )
+  );
 }

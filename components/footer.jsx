@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Mail, Facebook, Instagram, Twitter, Linkedin } from "lucide-react"
+import { useState } from "react";
+import Link from "next/link";
+import { Mail, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 
 export default function Footer() {
-  const [email, setEmail] = useState("")
-  const [subscribed, setSubscribed] = useState(false)
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
 
   const handleSubscribe = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (email) {
-      setSubscribed(true)
-      setEmail("")
-      setTimeout(() => setSubscribed(false), 3000)
+      setSubscribed(true);
+      setEmail("");
+      setTimeout(() => setSubscribed(false), 3000);
     }
-  }
+  };
 
   const footerLinks = {
     Shop: [
@@ -42,14 +42,14 @@ export default function Footer() {
       { label: "Cookie Policy", href: "/cookies" },
       { label: "Accessibility", href: "/accessibility" },
     ],
-  }
+  };
 
   const socialLinks = [
     { icon: Facebook, label: "Facebook", href: "#" },
     { icon: Instagram, label: "Instagram", href: "#" },
     { icon: Twitter, label: "Twitter", href: "#" },
     { icon: Linkedin, label: "LinkedIn", href: "#" },
-  ]
+  ];
 
   return (
     <footer className="bg-primary text-primary-foreground">
@@ -58,9 +58,10 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
-              <h3 className="text-3xl font-bold mb-2">Stay Updated</h3>
+              <h3 className="text-3xl font-bold mb-2">Cập nhật mới nhất</h3>
               <p className="text-primary-foreground/80">
-                Subscribe to our newsletter for exclusive offers and style tips.
+                Đăng ký nhận bản tin của chúng tôi để nhận các ưu đãi độc quyền
+                và mẹo phong cách.
               </p>
             </div>
             <form onSubmit={handleSubscribe} className="flex">
@@ -79,11 +80,13 @@ export default function Footer() {
                 className="px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-r-lg hover:bg-accent/90 transition-all duration-300 hover:scale-105 flex items-center gap-2"
               >
                 <Mail className="w-4 h-4" />
-                Subscribe
+                Đăng ký
               </button>
             </form>
             {subscribed && (
-              <div className="col-span-full text-center text-accent animate-in fade-in">Thanks for subscribing!</div>
+              <div className="col-span-full text-center text-accent animate-in fade-in">
+                Cảm ơn bạn đã đăng ký!
+              </div>
             )}
           </div>
         </div>
@@ -96,15 +99,17 @@ export default function Footer() {
             {/* Brand */}
             <div className="md:col-span-2 lg:col-span-1">
               <Link href="/">
-                <h2 className="text-2xl font-bold mb-4 hover:text-accent transition-colors">LUX</h2>
+                <h2 className="text-2xl font-bold mb-4 hover:text-accent transition-colors">
+                  LAMODE
+                </h2>
               </Link>
               <p className="text-primary-foreground/80 mb-6">
-                Premium clothing and lifestyle fashion for the modern individual.
+                "Đơn giản" là thời trang
               </p>
               {/* Social Links */}
               <div className="flex gap-4">
                 {socialLinks.map((social) => {
-                  const Icon = social.icon
+                  const Icon = social.icon;
                   return (
                     <a
                       key={social.label}
@@ -114,7 +119,7 @@ export default function Footer() {
                     >
                       <Icon className="w-5 h-5 text-primary-foreground group-hover:text-accent transition-colors" />
                     </a>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -142,7 +147,9 @@ export default function Footer() {
           {/* Divider */}
           <div className="border-t border-primary-foreground/20 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-primary-foreground/60 text-sm">© 2025 LUX Fashion. All rights reserved.</p>
+              <p className="text-primary-foreground/60 text-sm">
+                © 2025 LAMODE Fashion. All rights reserved.
+              </p>
               <div className="flex gap-6">
                 <Link
                   href="/privacy"
@@ -150,7 +157,10 @@ export default function Footer() {
                 >
                   Privacy
                 </Link>
-                <Link href="/terms" className="text-primary-foreground/60 hover:text-accent text-sm transition-colors">
+                <Link
+                  href="/terms"
+                  className="text-primary-foreground/60 hover:text-accent text-sm transition-colors"
+                >
                   Terms
                 </Link>
                 <Link
@@ -165,5 +175,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

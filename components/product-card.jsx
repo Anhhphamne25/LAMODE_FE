@@ -1,37 +1,47 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { ShoppingCart, Heart } from "lucide-react"
-import { useCart } from "@/contexts/cart-context"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import Link from "next/link";
+import { ShoppingCart, Heart } from "lucide-react";
+import { useCart } from "@/contexts/cart-context";
+import { Button } from "@/components/ui/button";
 
-export default function ProductCard({ id, name, price, image, badge, badgeType = "new" }) {
-  const { addToCart, addToWishlist, isInWishlist } = useCart()
-  const [isHovered, setIsHovered] = useState(false)
-  const [addedToCart, setAddedToCart] = useState(false)
+export default function ProductCard({
+  id,
+  name,
+  price,
+  image,
+  badge,
+  badgeType = "new",
+}) {
+  const { addToCart, addToWishlist, isInWishlist } = useCart();
+  const [isHovered, setIsHovered] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
 
-  const badgeColor = badgeType === "sale" ? "bg-accent text-accent-foreground" : "bg-primary text-primary-foreground"
+  const badgeColor =
+    badgeType === "sale"
+      ? "bg-accent text-accent-foreground"
+      : "bg-primary text-primary-foreground";
 
   const handleAddToCart = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
     addToCart({
       id,
       name,
       price,
       image,
       size: "M",
-    })
-    setAddedToCart(true)
-    setTimeout(() => setAddedToCart(false), 2000)
-  }
+    });
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
+  };
 
   const handleWishlist = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    addToWishlist({ id, name, price, image })
-  }
+    e.preventDefault();
+    e.stopPropagation();
+    addToWishlist({ id, name, price, image });
+  };
 
   return (
     <Link href={`/products/${id}`} className="group card-lift block">
@@ -80,11 +90,15 @@ export default function ProductCard({ id, name, price, image, badge, badgeType =
         <button
           onClick={handleWishlist}
           className={`absolute top-4 left-4 p-2 rounded-full transition-all duration-300 hover:scale-110 ${
-            isInWishlist(id) ? "bg-accent text-accent-foreground" : "bg-white/90 hover:bg-white text-foreground"
+            isInWishlist(id)
+              ? "bg-accent text-accent-foreground"
+              : "bg-white/90 hover:bg-white text-foreground"
           }`}
           title="Add to wishlist"
         >
-          <Heart className={`w-5 h-5 ${isInWishlist(id) ? "fill-current" : ""}`} />
+          <Heart
+            className={`w-5 h-5 ${isInWishlist(id) ? "fill-current" : ""}`}
+          />
         </button>
       </div>
 
@@ -93,8 +107,10 @@ export default function ProductCard({ id, name, price, image, badge, badgeType =
         <h3 className="font-semibold text-foreground/90 group-hover:text-primary transition-colors line-clamp-2">
           {name}
         </h3>
-        <p className="text-lg font-bold text-primary mt-2">${price.toFixed(2)}</p>
+        <p className="text-lg font-bold text-primary mt-2">
+          {price.toLocaleString("vi-VN")} VNĐ
+        </p>
       </div>
     </Link>
-  )
+  );
 }

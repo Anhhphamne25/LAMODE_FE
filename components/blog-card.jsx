@@ -1,28 +1,28 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { ArrowRight } from "lucide-react"
+import { useState, useEffect } from "react";
+import { ArrowRight } from "lucide-react";
 
 export default function BlogCard({ image, title, excerpt, date, category }) {
-  const [isVisible, setIsVisible] = useState(false)
-  const [ref, setRef] = useState(null)
+  const [isVisible, setIsVisible] = useState(false);
+  const [ref, setRef] = useState(null);
 
   useEffect(() => {
-    if (!ref) return
+    if (!ref) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.unobserve(entry.target)
+          setIsVisible(true);
+          observer.unobserve(entry.target);
         }
       },
-      { threshold: 0.1 },
-    )
+      { threshold: 0.1 }
+    );
 
-    observer.observe(ref)
-    return () => observer.disconnect()
-  }, [ref])
+    observer.observe(ref);
+    return () => observer.disconnect();
+  }, [ref]);
 
   return (
     <div
@@ -52,15 +52,17 @@ export default function BlogCard({ image, title, excerpt, date, category }) {
           <h3 className="text-xl font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
             {title}
           </h3>
-          <p className="text-foreground/60 text-sm leading-relaxed line-clamp-2">{excerpt}</p>
+          <p className="text-foreground/60 text-sm leading-relaxed line-clamp-2">
+            {excerpt}
+          </p>
         </div>
 
         {/* Read More Button */}
         <button className="mt-6 inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300 group/btn">
-          Read More
+          Xem thêm
           <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
         </button>
       </div>
     </div>
-  )
+  );
 }

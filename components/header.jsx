@@ -1,36 +1,39 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { Menu, X, Search, ShoppingCart, User } from "lucide-react"
-import { useCart } from "@/contexts/cart-context"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Menu, X, Search, ShoppingCart, User } from "lucide-react";
+import { useCart } from "@/contexts/cart-context";
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
-  const { getCartCount } = useCart()
-  const cartCount = getCartCount()
+  const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const { getCartCount } = useCart();
+  const cartCount = getCartCount();
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
-    }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const menuItems = [
     { label: "Home", href: "/" },
     { label: "Products", href: "/products" },
+    { label: "Albums", href: "/album" },
     { label: "Blog", href: "/blog" },
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
-  ]
+  ];
 
   return (
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-background/95 backdrop-blur-sm shadow-sm" : "bg-background"
+        isScrolled
+          ? "bg-background/95 backdrop-blur-sm shadow-sm"
+          : "bg-background"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
@@ -38,7 +41,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 group">
             <div className="text-xl font-bold text-primary group-hover:text-primary/80 transition-colors duration-300">
-              LUX
+              LAMODE
             </div>
           </Link>
 
@@ -94,7 +97,11 @@ export default function Header() {
               className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors duration-200"
               onClick={() => setIsOpen(!isOpen)}
             >
-              {isOpen ? <X className="w-5 h-5 text-foreground" /> : <Menu className="w-5 h-5 text-foreground" />}
+              {isOpen ? (
+                <X className="w-5 h-5 text-foreground" />
+              ) : (
+                <Menu className="w-5 h-5 text-foreground" />
+              )}
             </button>
           </div>
         </div>
@@ -116,5 +123,5 @@ export default function Header() {
         )}
       </div>
     </header>
-  )
+  );
 }
