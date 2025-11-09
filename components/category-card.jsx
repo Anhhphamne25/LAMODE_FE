@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 
 export default function CategoryCard({ name, image }) {
-  const [isHovered, setIsHovered] = useState(false)
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div
-      className="relative overflow-hidden rounded-lg cursor-pointer group"
+      className="relative overflow-hidden  cursor-pointer group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -29,9 +29,11 @@ export default function CategoryCard({ name, image }) {
             isHovered ? "translate-y-0" : "translate-y-4"
           }`}
         >
-          <h3 className="text-xl font-semibold text-white text-center">{name}</h3>
+          <h3 className="text-2xl font-semibold text-white text-center">
+            {name}
+          </h3>
         </div>
       </div>
     </div>
-  )
+  );
 }
