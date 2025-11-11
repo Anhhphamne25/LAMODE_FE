@@ -23,6 +23,7 @@ export default function ProductCard({
       ? "bg-accent text-accent-foreground"
       : "bg-primary text-primary-foreground";
 
+  // đây là hàm thêm vào giỏ hàng
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
