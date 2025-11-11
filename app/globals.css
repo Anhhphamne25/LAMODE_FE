@@ -95,8 +95,8 @@
 }
 
 @theme inline {
-  --font-sans: "Geist", "Geist Fallback";
-  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --font-sans: var(--font-sans); /* dùng biến font từ Next.js */
+  --font-mono: "Geist Mono", monospace; /* nếu bạn có font khác */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -199,7 +199,8 @@
 
   /* Card lift animation */
   .card-lift {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .card-lift:hover {
@@ -305,7 +306,12 @@
   }
 
   .shimmer {
-    background: linear-gradient(90deg, var(--muted) 25%, var(--card) 50%, var(--muted) 75%);
+    background: linear-gradient(
+      90deg,
+      var(--muted) 25%,
+      var(--card) 50%,
+      var(--muted) 75%
+    );
     background-size: 1000px 100%;
     animation: shimmer 2s infinite;
   }

@@ -1,13 +1,17 @@
-"use client"
+"use client";
 
-import { Trash2, Plus, Minus } from "lucide-react"
+import { Trash2, Plus, Minus } from "lucide-react";
 
 export function CartItem({ item, onUpdateQuantity, onRemove }) {
   return (
     <div className="flex gap-4 p-4 bg-card rounded-lg border border-border hover:shadow-lg transition-all duration-300 card-lift group">
       {/* Product Image */}
       <div className="w-24 h-24 bg-muted rounded-lg flex-shrink-0 overflow-hidden group-hover:scale-105 transition-transform duration-300">
-        <img src={item.image || "/placeholder.svg"} alt={item.name} className="w-full h-full object-cover" />
+        <img
+          src={item.image || "/placeholder.svg"}
+          alt={item.name}
+          className="w-full h-full object-cover"
+        />
       </div>
 
       {/* Product Info */}
@@ -17,7 +21,9 @@ export function CartItem({ item, onUpdateQuantity, onRemove }) {
           Size: {item.size}
           {item.color && ` • Color: ${item.color}`}
         </p>
-        <p className="font-bold text-primary">${item.price.toFixed(2)}</p>
+        <p className="font-bold text-primary">
+          {item.price.toLocaleString("vi-VN")} VNĐ
+        </p>
       </div>
 
       {/* Quantity Stepper */}
@@ -39,15 +45,17 @@ export function CartItem({ item, onUpdateQuantity, onRemove }) {
 
       {/* Subtotal */}
       <div className="text-right flex flex-col justify-center items-end">
-        <p className="font-bold text-foreground">${(item.price * item.quantity).toFixed(2)}</p>
+        <p className="font-bold text-foreground">
+          {(item.price * item.quantity).toLocaleString("vi-VN")} VNĐ
+        </p>
         <button
           onClick={() => onRemove(item.id)}
           className="text-destructive hover:text-destructive/80 mt-2 transition-colors flex items-center gap-1 text-sm"
         >
           <Trash2 className="w-4 h-4" />
-          Remove
+          Xóa
         </button>
       </div>
     </div>
-  )
+  );
 }

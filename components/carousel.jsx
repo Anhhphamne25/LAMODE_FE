@@ -1,62 +1,74 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import ProductCard from "./product-card"
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import ProductCard from "./product-card";
 
-export default function Carousel({ items, title, description, autoScroll = true, autoScrollInterval = 5000 }) {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [itemsPerView, setItemsPerView] = useState(4)
+export default function Carousel({
+  items,
+  title,
+  description,
+  autoScroll = true,
+  autoScrollInterval = 5000,
+}) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsPerView, setItemsPerView] = useState(4);
 
   // Update items per view based on screen size
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setItemsPerView(1)
+        setItemsPerView(1);
       } else if (window.innerWidth < 1024) {
-        setItemsPerView(2)
+        setItemsPerView(2);
       } else {
-        setItemsPerView(4)
+        setItemsPerView(4);
       }
-    }
+    };
 
-    handleResize()
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Auto scroll
   useEffect(() => {
-    if (!autoScroll) return
+    if (!autoScroll) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => {
-        const maxIndex = Math.max(0, items.length - itemsPerView)
-        return prev >= maxIndex ? 0 : prev + 1
-      })
-    }, autoScrollInterval)
+        const maxIndex = Math.max(0, items.length - itemsPerView);
+        return prev >= maxIndex ? 0 : prev + 1;
+      });
+    }, autoScrollInterval);
 
-    return () => clearInterval(interval)
-  }, [autoScroll, autoScrollInterval, items.length, itemsPerView])
+    return () => clearInterval(interval);
+  }, [autoScroll, autoScrollInterval, items.length, itemsPerView]);
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1))
-  }
+    setCurrentIndex((prev) => Math.max(0, prev - 1));
+  };
 
   const handleNext = () => {
-    const maxIndex = Math.max(0, items.length - itemsPerView)
-    setCurrentIndex((prev) => Math.min(maxIndex, prev + 1))
-  }
+    const maxIndex = Math.max(0, items.length - itemsPerView);
+    setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
+  };
 
-  const maxIndex = Math.max(0, items.length - itemsPerView)
-  const visibleItems = items.slice(currentIndex, currentIndex + itemsPerView)
+  const maxIndex = Math.max(0, items.length - itemsPerView);
+  const visibleItems = items.slice(currentIndex, currentIndex + itemsPerView);
 
   return (
     <section className="py-20 px-4 md:px-8 lg:px-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">{title}</h2>
-          {description && <p className="text-foreground/60 text-lg max-w-2xl">{description}</p>}
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+            {title}
+          </h2>
+          {description && (
+            <p className="text-foreground/60 text-lg max-w-2xl">
+              {description}
+            </p>
+          )}
         </div>
 
         {/* Carousel Container */}
@@ -65,12 +77,18 @@ export default function Carousel({ items, title, description, autoScroll = true,
             <div
               className="flex gap-8 transition-transform duration-500 ease-out"
               style={{
-                transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
+                transform: `translateX(-${
+                  currentIndex * (100 / itemsPerView)
+                }%)`,
               }}
             >
               {items.map((item) => (
-                <div key={item.id} className="flex-shrink-0 w-full md:w-1/2 lg:w-1/4">
+                <div
+                  key={item.id}
+                  className="flex-shrink-0 w-full md:w-1/2 lg:w-1/4"
+                >
                   <ProductCard
+                    id={item.id}
                     name={item.name}
                     price={item.price}
                     image={item.image}
@@ -112,7 +130,9 @@ export default function Carousel({ items, title, description, autoScroll = true,
                 key={index}
                 onClick={() => setCurrentIndex(index)}
                 className={`h-2 rounded-full transition-all duration-300 ${
-                  index === currentIndex ? "w-8 bg-primary" : "w-2 bg-primary/30 hover:bg-primary/50"
+                  index === currentIndex
+                    ? "w-8 bg-primary"
+                    : "w-2 bg-primary/30 hover:bg-primary/50"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
@@ -121,5 +141,5 @@ export default function Carousel({ items, title, description, autoScroll = true,
         </div>
       </div>
     </section>
-  )
+  );
 }
