@@ -1,136 +1,109 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { ProductFilter } from "@/components/products/product-filter";
 import { ProductToolbar } from "@/components/products/product-toolbar";
 import { ProductGrid } from "@/components/products/product-grid";
 
-const mockProducts = [
-  {
-    id: 1,
-    name: "Premium Cashmere Sweater",
-    price: 189.99,
-    image: "/luxury-cashmere-sweater.jpg",
-    category: "Tops",
-    color: "Black",
-    size: "M",
-    tag: "New",
-  },
-  {
-    id: 2,
-    name: "Designer Black Jeans",
-    price: 129.99,
-    image: "/designer-shoes.jpg",
-    category: "Bottoms",
-    color: "Black",
-    size: "32",
-    tag: "Sale",
-  },
-  {
-    id: 3,
-    name: "Silk Blouse",
-    price: 99.99,
-    image: "/womens-fashion-clothing.jpg",
-    category: "Tops",
-    color: "White",
-    size: "S",
-  },
-  {
-    id: 4,
-    name: "Luxury Leather Jacket",
-    price: 299.99,
-    image: "/mens-fashion-clothing.jpg",
-    category: "Outerwear",
-    color: "Brown",
-    size: "L",
-  },
-  {
-    id: 5,
-    name: "Designer Accessories Set",
-    price: 79.99,
-    image: "/fashion-accessories.jpg",
-    category: "Accessories",
-    color: "Gold",
-    size: "One Size",
-    tag: "New",
-  },
-  {
-    id: 6,
-    name: "Summer Linen Dress",
-    price: 129.99,
-    image: "/summer-collection-clothing.jpg",
-    category: "Dresses",
-    color: "Blue",
-    size: "M",
-    tag: "Sale",
-  },
-  {
-    id: 7,
-    name: "Cashmere Scarf",
-    price: 89.99,
-    image: "/luxury-cashmere-sweater.jpg",
-    category: "Accessories",
-    color: "Beige",
-    size: "One Size",
-  },
-  {
-    id: 8,
-    name: "Athletic Polo",
-    price: 69.99,
-    image: "/mens-fashion-clothing.jpg",
-    category: "Tops",
-    color: "Navy",
-    size: "M",
-  },
-];
-
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedColor, setSelectedColor] = useState("All");
-  const [priceRange, setPriceRange] = useState([0, 300]);
+  const [priceRange, setPriceRange] = useState([0, 1000000]);
   const [sortBy, setSortBy] = useState("newest");
   const [showFilters, setShowFilters] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  // 🧩 Gọi API Strapi
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(
+          "https://giving-warmth-26b1385265.strapiapp.com/api/products?populate[image][fields][0]=url&populate[colors][fields][0]=name&populate[sizes][fields][0]=name&populate[categories][fields][0]=name&populate[categorytinies][fields][0]=name&pagination[pageSize]=100"
+        );
+        const data = await response.json();
+        setProducts(data.data || []);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  // ✅ Danh mục 1 cấp
   const categories = [
     "All",
+    "Men",
+    "Women",
     "Tops",
+    "Skirts",
     "Bottoms",
-    "Dresses",
-    "Outerwear",
     "Accessories",
   ];
+
   const colors = [
     "All",
     "Black",
     "White",
     "Brown",
-    "Gold",
     "Beige",
-    "Navy",
-    "Blue",
+    "Navy Blue",
+    "Light Blue",
+    "Pink",
+    "Red",
+    "Olive Green",
+    "Gray",
   ];
 
-  const filtered = mockProducts.filter((product) => {
+  // ✅ Lọc sản phẩm
+  const filtered = products.filter((item) => {
+    const p = item.attributes;
+
+    // Lấy category chính (1 cấp)
+    const categoryNames =
+      p.categories?.data?.map((c) => c.attributes?.name) || [];
+
+    // Lấy tất cả màu
+    const colorNames = p.colors?.data?.map((c) => c.attributes?.name) || [];
+
+    // Chuyển giá về number
+    const price = Number(p.price) || 0;
+
+    // Kiểm tra category, color và price
+    // Category match: nếu chọn "All" hoặc categoryNames có chứa selectedCategory
     const categoryMatch =
-      selectedCategory === "All" || product.category === selectedCategory;
+      selectedCategory === "All" || categoryNames.includes(selectedCategory);
+
+    console.log("main", categoryNames);
+    console.log("sel", selectedCategory);
     const colorMatch =
-      selectedColor === "All" || product.color === selectedColor;
-    const priceMatch =
-      product.price >= priceRange[0] && product.price <= priceRange[1];
+      selectedColor === "All" || colorNames.includes(selectedColor);
+
+    const priceMatch = price >= priceRange[0] && price <= priceRange[1];
+
     return categoryMatch && colorMatch && priceMatch;
   });
 
-  // Sort products
+  // ✅ Sort sản phẩm
   if (sortBy === "price-low") {
-    filtered.sort((a, b) => a.price - b.price);
+    filtered.sort(
+      (a, b) =>
+        Number(a.attributes.price || 0) - Number(b.attributes.price || 0)
+    );
   } else if (sortBy === "price-high") {
-    filtered.sort((a, b) => b.price - a.price);
+    filtered.sort(
+      (a, b) =>
+        Number(b.attributes.price || 0) - Number(a.attributes.price || 0)
+    );
   } else if (sortBy === "popular") {
     filtered.reverse();
   }
 
+  // ✅ Render
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
@@ -170,7 +143,14 @@ export default function ProductsPage() {
               onSortChange={setSortBy}
               onToggleFilters={() => setShowFilters(!showFilters)}
             />
-            <ProductGrid products={filtered} />
+
+            {loading ? (
+              <div className="text-center py-20 text-muted-foreground">
+                Đang tải sản phẩm...
+              </div>
+            ) : (
+              <ProductGrid products={filtered} />
+            )}
           </div>
         </div>
       </main>
