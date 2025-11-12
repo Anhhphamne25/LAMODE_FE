@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
 export default function PromotionBanner() {
@@ -37,10 +38,12 @@ export default function PromotionBanner() {
                 Giảm đến 40% cho các mặt hàng được chọn. Đừng bỏ lỡ ưu đãi đặc
                 biệt này.
               </p>
-              <button className="inline-flex items-center gap-2 bg-primary-foreground text-primary font-semibold px-6 py-3 rounded-lg hover:bg-primary-foreground/90 transition-all duration-300 hover:scale-105 group">
-                Mua ngay
-                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
+              <Link href="/album">
+                <button className="inline-flex items-center gap-2 bg-primary-foreground text-primary font-semibold px-6 py-3 rounded-lg hover:bg-primary-foreground/90 transition-all duration-300 hover:scale-105 group">
+                  Xem thêm
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </Link>
             </div>
             <div className="flex-1 hidden md:block">
               <img

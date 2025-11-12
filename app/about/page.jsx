@@ -39,19 +39,19 @@ const teamMembers = [
 
 const milestones = [
   {
-    year: "3/11",
+    year: "2023",
     title: "Bắt đầu hành trình",
     description:
       "LaMode chính thức ra mắt – mang thời trang hiện đại, cá tính và đầy cảm hứng đến giới trẻ Việt.",
   },
   {
-    year: "5/11",
+    year: "2024",
     title: "Bộ sưu tập đầu tiên",
     description:
       "Ra mắt BST đầu tay, nhanh chóng trở thành xu hướng được yêu thích trong cộng đồng fashionista.",
   },
   {
-    year: "10/11",
+    year: "2025",
     title: "Cộng đồng LaMode",
     description:
       "Xây dựng cộng đồng người yêu thời trang – nơi chia sẻ phong cách và lan tỏa năng lượng sáng tạo.",

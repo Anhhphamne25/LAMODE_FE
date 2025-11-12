@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
-import { ProductFilter } from "@/components/products/product-filter"
-import { ProductToolbar } from "@/components/products/product-toolbar"
-import { ProductGrid } from "@/components/products/product-grid"
+import { useState } from "react";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+import { ProductFilter } from "@/components/products/product-filter";
+import { ProductToolbar } from "@/components/products/product-toolbar";
+import { ProductGrid } from "@/components/products/product-grid";
 
 const mockProducts = [
   {
@@ -84,32 +84,51 @@ const mockProducts = [
     color: "Navy",
     size: "M",
   },
-]
+];
 
 export default function ProductsPage() {
-  const [selectedCategory, setSelectedCategory] = useState("All")
-  const [selectedColor, setSelectedColor] = useState("All")
-  const [priceRange, setPriceRange] = useState([0, 300])
-  const [sortBy, setSortBy] = useState("newest")
-  const [showFilters, setShowFilters] = useState(true)
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedColor, setSelectedColor] = useState("All");
+  const [priceRange, setPriceRange] = useState([0, 300]);
+  const [sortBy, setSortBy] = useState("newest");
+  const [showFilters, setShowFilters] = useState(true);
 
-  const categories = ["All", "Tops", "Bottoms", "Dresses", "Outerwear", "Accessories"]
-  const colors = ["All", "Black", "White", "Brown", "Gold", "Beige", "Navy", "Blue"]
+  const categories = [
+    "All",
+    "Tops",
+    "Bottoms",
+    "Dresses",
+    "Outerwear",
+    "Accessories",
+  ];
+  const colors = [
+    "All",
+    "Black",
+    "White",
+    "Brown",
+    "Gold",
+    "Beige",
+    "Navy",
+    "Blue",
+  ];
 
   const filtered = mockProducts.filter((product) => {
-    const categoryMatch = selectedCategory === "All" || product.category === selectedCategory
-    const colorMatch = selectedColor === "All" || product.color === selectedColor
-    const priceMatch = product.price >= priceRange[0] && product.price <= priceRange[1]
-    return categoryMatch && colorMatch && priceMatch
-  })
+    const categoryMatch =
+      selectedCategory === "All" || product.category === selectedCategory;
+    const colorMatch =
+      selectedColor === "All" || product.color === selectedColor;
+    const priceMatch =
+      product.price >= priceRange[0] && product.price <= priceRange[1];
+    return categoryMatch && colorMatch && priceMatch;
+  });
 
   // Sort products
   if (sortBy === "price-low") {
-    filtered.sort((a, b) => a.price - b.price)
+    filtered.sort((a, b) => a.price - b.price);
   } else if (sortBy === "price-high") {
-    filtered.sort((a, b) => b.price - a.price)
+    filtered.sort((a, b) => b.price - a.price);
   } else if (sortBy === "popular") {
-    filtered.reverse()
+    filtered.reverse();
   }
 
   return (
@@ -123,10 +142,10 @@ export default function ProductsPage() {
             Home
           </a>
           <span>/</span>
-          <span className="text-foreground font-medium">Products</span>
+          <span className="text-foreground font-medium">Sản phẩm</span>
         </div>
 
-        <h1 className="text-4xl font-bold mb-8 fade-in-up">Collection</h1>
+        <h1 className="text-4xl font-bold mb-8 fade-in-up">Bộ sưu tập</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar Filters */}
@@ -158,5 +177,5 @@ export default function ProductsPage() {
 
       <Footer />
     </div>
-  )
+  );
 }

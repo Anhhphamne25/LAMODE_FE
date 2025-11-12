@@ -1,138 +1,125 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { X, ZoomIn } from "lucide-react"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
-
-const mockAlbums = [
-  {
-    id: 1,
-    title: "Spring Collection 2025",
-    season: "Spring",
-    images: [
-      "/summer-collection-clothing.jpg",
-      "/womens-fashion-clothing.jpg",
-      "/designer-shoes.jpg",
-      "/fashion-accessories.jpg",
-      "/luxury-cashmere-sweater.jpg",
-      "/mens-fashion-clothing.jpg",
-    ],
-  },
-  {
-    id: 2,
-    title: "Winter Essentials",
-    season: "Winter",
-    images: [
-      "/luxury-cashmere-sweater.jpg",
-      "/mens-fashion-clothing.jpg",
-      "/fashion-accessories.jpg",
-      "/designer-shoes.jpg",
-      "/womens-fashion-clothing.jpg",
-      "/summer-collection-clothing.jpg",
-    ],
-  },
-  {
-    id: 3,
-    title: "Summer Vibes",
-    season: "Summer",
-    images: [
-      "/designer-shoes.jpg",
-      "/summer-collection-clothing.jpg",
-      "/womens-fashion-clothing.jpg",
-      "/fashion-accessories.jpg",
-      "/luxury-cashmere-sweater.jpg",
-      "/mens-fashion-clothing.jpg",
-    ],
-  },
-  {
-    id: 4,
-    title: "Fall Fashion",
-    season: "Fall",
-    images: [
-      "/fashion-accessories.jpg",
-      "/luxury-cashmere-sweater.jpg",
-      "/designer-shoes.jpg",
-      "/mens-fashion-clothing.jpg",
-      "/summer-collection-clothing.jpg",
-      "/womens-fashion-clothing.jpg",
-    ],
-  },
-]
+import { useState, useEffect } from "react";
+import { X, ZoomIn } from "lucide-react";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 
 export default function AlbumPage() {
-  const [selectedAlbum, setSelectedAlbum] = useState(0)
-  const [selectedImage, setSelectedImage] = useState(null)
-  const [selectedSeason, setSelectedSeason] = useState("All")
+  const [albums, setAlbums] = useState([]);
+  const [selectedAlbum, setSelectedAlbum] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedname, setSelectedname] = useState("All");
+  const [loading, setLoading] = useState(true);
 
-  const seasons = ["All", "Spring", "Summer", "Fall", "Winter"]
+  useEffect(() => {
+    const fetchAlbums = async () => {
+      try {
+        const response = await fetch(
+          "https://giving-warmth-26b1385265.strapiapp.com/api/albums?populate[images][fields]=url"
+        );
+        const data = await response.json();
+        setAlbums(data.data);
+      } catch (error) {
+        console.error("Error fetching albums:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAlbums();
+  }, []);
+
+  console.log(albums);
+
+  // Lấy tất cả name từ API (thêm "All" vào đầu)
+  const names = [
+    "All",
+    ...Array.from(new Set(albums.map((album) => album.attributes.name))),
+  ];
+
   const filteredAlbums =
-    selectedSeason === "All" ? mockAlbums : mockAlbums.filter((album) => album.season === selectedSeason)
+    selectedname === "All"
+      ? albums
+      : albums.filter((album) => album.attributes.name === selectedname);
 
-  const currentAlbum = filteredAlbums[selectedAlbum] || filteredAlbums[0]
+  const currentAlbum = filteredAlbums[selectedAlbum];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header />
+        <main className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8 py-12">
+          <div className="text-center">Loading albums...</div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8 py-12">
-        <h1 className="text-4xl font-bold mb-8 fade-in-up">Lookbook</h1>
+        <h1 className="text-4xl font-bold mb-8 fade-in-up">Bộ sưu tập</h1>
 
-        {/* Season Filter */}
+        {/* name Filter */}
         <div className="flex flex-wrap gap-3 mb-12">
-          {seasons.map((season) => (
+          {names.map((name) => (
             <button
-              key={season}
+              key={name}
               onClick={() => {
-                setSelectedSeason(season)
-                setSelectedAlbum(0)
+                setSelectedname(name);
+                setSelectedAlbum(0);
               }}
               className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                selectedSeason === season
+                selectedname === name
                   ? "bg-primary text-primary-foreground scale-105"
                   : "bg-muted text-muted-foreground hover:bg-muted/80"
               }`}
             >
-              {season}
+              {name}
             </button>
           ))}
         </div>
 
         {/* Album Selector */}
-        <div className="flex gap-4 mb-12 overflow-x-auto pb-4">
-          {filteredAlbums.map((album, index) => (
-            <button
-              key={album.id}
-              onClick={() => setSelectedAlbum(index)}
-              className={`flex-shrink-0 px-6 py-3 rounded-lg font-medium transition-all duration-300 whitespace-nowrap ${
-                selectedAlbum === index
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-              }`}
-            >
-              {album.title}
-            </button>
-          ))}
-        </div>
+        {filteredAlbums.length > 0 && (
+          <div className="flex gap-4 mb-12 overflow-x-auto pb-4">
+            {filteredAlbums.map((album, index) => (
+              <button
+                key={album.id}
+                onClick={() => setSelectedAlbum(index)}
+                className={`flex-shrink-0 px-6 py-3 rounded-lg font-medium transition-all duration-300 whitespace-nowrap ${
+                  selectedAlbum === index
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                }`}
+              >
+                {album.attributes.name} {/* Hiển thị name thay vì title */}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Masonry Grid */}
-        {currentAlbum && (
+        {currentAlbum && currentAlbum.attributes.images.data.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-max">
-            {currentAlbum.images.map((image, index) => {
+            {currentAlbum.attributes.images.data.map((image, index) => {
               // Stagger heights for masonry effect
-              const heights = ["h-64", "h-72", "h-80", "h-60", "h-68", "h-76"]
-              const heightClass = heights[index % heights.length]
+              const heights = ["h-64", "h-72", "h-80", "h-60", "h-68", "h-76"];
+              const heightClass = heights[index % heights.length];
 
               return (
                 <div
-                  key={index}
+                  key={image.id}
                   className={`${heightClass} group relative overflow-hidden rounded-lg scroll-reveal cursor-pointer`}
-                  onClick={() => setSelectedImage(image)}
+                  onClick={() => setSelectedImage(image.attributes.url)}
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <img
-                    src={image || "/placeholder.svg"}
-                    alt={`Gallery ${index + 1}`}
+                    src={image.attributes.url || "/placeholder.svg"}
+                    alt={`${currentAlbum.attributes.name} image ${index + 1}`}
                     loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
@@ -142,8 +129,15 @@ export default function AlbumPage() {
                     <ZoomIn className="w-8 h-8 text-white" />
                   </div>
                 </div>
-              )
+              );
             })}
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && filteredAlbums.length === 0 && (
+          <div className="text-center text-muted-foreground py-12">
+            No albums found for "{selectedname}"
           </div>
         )}
       </main>
@@ -180,5 +174,5 @@ export default function AlbumPage() {
 
       <Footer />
     </div>
-  )
+  );
 }

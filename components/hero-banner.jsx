@@ -23,10 +23,14 @@ export default function HeroBanner() {
     <section className="relative w-full h-screen md:h-[600px] overflow-hidden bg-background">
       {/* Parallax Background Image */}
       <div
-        className="absolute inset-0 bg-cover bg-center"
+        className="absolute inset-0 bg-center w-full bg-cover"
         style={{
-          backgroundImage: "url(/herobanner.jpeg)",
-          transform: `translateY(${parallaxOffset}px) rotate(180deg)`,
+          backgroundImage:
+            "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(/herobanner.jpg)",
+          backgroundSize: "contain",
+          // backgroundRepeat: "no-repeat",
+          // width: "100%",
+          transform: `translateY(${parallaxOffset}px)`,
           transition: "transform 0.1s ease-out",
         }}
       >
@@ -35,7 +39,7 @@ export default function HeroBanner() {
       </div>
 
       {/* Content */}
-      <div className="relative h-full flex items-center justify-center px-4 md:px-8">
+      <div className="relative h-full flex items-center justify-center px-4 md:px-8 w-full">
         <div
           className="text-center max-w-2xl"
           style={{
@@ -48,7 +52,7 @@ export default function HeroBanner() {
             LAMODE
           </h1>
           <p className="text-5xl md:text-6xl text-white/90 mb-8 text-pretty">
-            "Đơn giản" là thời trang
+            Đơn giản là "thời trang"
           </p>
           {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
