@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, use } from "react";
+import { useState, use, useEffect } from "react";
 import { useCart } from "@/contexts/cart-context";
 import Link from "next/link";
 import {
@@ -16,63 +16,81 @@ import {
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
-// Mock product data - in a real app, this would come from an API
-const products = {
-  1: {
-    id: 1,
-    name: "Quần short vải thô mỏng dáng A ống rộng phối ly xoè tạo kiểu khóa thân sau",
-    price: 1290000,
-    description:
-      "Mẫu quần được các chị em yêu thích cái đẹp ưa chuộng. Đây là một gợi ý hay ho cho trang phục công sở hiện đại, đễ dàng phối đồ ở nhiều hoàn cảnh khác nhau. Chất liệu:Vải thô mỏng - 50% Polyester 40% Rayon 10% Nylon",
-    images: [
-      "https://cdn.hstatic.net/products/1000392326/bad73580__n__1298k_-_bqn73580__n__1198k__1__219c387ce97449149f61f2951cf92930_master.jpg",
-      "https://cdn.hstatic.net/products/1000392326/bad73580__n__1298k_-_bqn73580__n__1198k__3__dab6c24d9e4c4e488bd3595c9d33c8ca_master.jpg",
-      "https://cdn.hstatic.net/products/1000392326/bad73580__n__1298k_-_bqn73580__n__1198k__2__a04fe770568543da84f1f3952563c19d_master.jpg",
-      "https://cdn.hstatic.net/products/1000392326/bad73580__b__1298k_-_bqn73580__b__1198k__1__cff5d78ced4249c29db2e4d762d9cbc1_master.jpg",
-    ],
-    category: "skirt",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["Cream", "Navy", "Charcoal"],
-    material: "100% Grade-A Cashmere",
-    care: "Chỉ giặt khô",
-    rating: 4.8,
-    reviews: 124,
-    inStock: true,
-    badge: "New",
-  },
-  2: {
-    id: 2,
-    name: "Silk Blend Dress",
-    price: 189.99,
-    description:
-      "Elegant silk blend dress featuring a flowing silhouette and luxurious drape. This versatile piece transitions seamlessly from day to evening wear.",
-    images: [
-      "/elegant-silk-dress.jpg",
-      "/silk-dress-detail.jpg",
-      "/silk-dress-back.jpg",
-    ],
-    category: "Dresses",
-    sizes: ["XS", "S", "M", "L", "XL"],
-    colors: ["Black", "Burgundy", "Emerald"],
-    material: "70% Silk, 30% Cotton",
-    care: "Hand wash cold",
-    rating: 4.9,
-    reviews: 89,
-    inStock: true,
-    badge: "Sale",
-  },
-};
-
 export default function ProductDetailPage({ params }) {
   const resolvedParams = use(params);
-  const product = products[resolvedParams.id] || products[1];
-
   const { addToCart, addToWishlist, isInWishlist } = useCart();
-  const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // ✅ Không dùng product khi chưa có dữ liệu
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [addedToCart, setAddedToCart] = useState(false);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(
+          "https://giving-warmth-26b1385265.strapiapp.com/api/products?populate[image][fields][0]=url&populate[colors][fields][0]=name&populate[sizes][fields][0]=name&populate[categories][fields][0]=name&populate[categorytinies][fields][0]=name&pagination[pageSize]=100"
+        );
+        const data = await response.json();
+
+        const mappedProducts = (data.data || []).map((item) => {
+          const attrs = item.attributes;
+          return {
+            id: item.id,
+            name: attrs.name,
+            description: attrs.description,
+            price: attrs.price,
+            material: attrs.material,
+            care: attrs.care,
+            rating: attrs.rating || 0,
+            inStock: attrs.inStock,
+            badge: attrs.badge,
+            images: attrs.image?.data?.map((img) => img.attributes.url) || [],
+            colors:
+              attrs.colors?.data?.map((color) => color.attributes.name) || [],
+            sizes: attrs.sizes?.data?.map((size) => size.attributes.name) || [],
+            categories:
+              attrs.categories?.data?.map((cat) => cat.attributes.name) || [],
+            categorytinies:
+              attrs.categorytinies?.data?.map((cat) => cat.attributes.name) ||
+              [],
+          };
+        });
+
+        setProducts(mappedProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  // ✅ Xác định product sau khi có dữ liệu
+  const product =
+    products.find((p) => p.id === Number(resolvedParams.id)) || products[0];
+
+  // ✅ Khi product thay đổi, cập nhật lại size/color mặc định
+  useEffect(() => {
+    if (product) {
+      setSelectedSize(product.sizes?.[0] || "");
+      setSelectedColor(product.colors?.[0] || "");
+    }
+  }, [product]);
+
+  if (loading || !product) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Đang tải sản phẩm...</p>
+      </div>
+    );
+  }
 
   const handleAddToCart = () => {
     addToCart(
@@ -80,7 +98,7 @@ export default function ProductDetailPage({ params }) {
         id: product.id,
         name: product.name,
         price: product.price,
-        image: product.images[0],
+        image: product.images?.[0],
         size: selectedSize,
         color: selectedColor,
       },
@@ -95,7 +113,7 @@ export default function ProductDetailPage({ params }) {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.images[0],
+      image: product.images?.[0],
     });
   };
 
@@ -136,10 +154,11 @@ export default function ProductDetailPage({ params }) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Image Gallery */}
             <div className="space-y-4">
-              {/* Main Image */}
               <div className="relative aspect-square bg-muted rounded-lg overflow-hidden group">
                 <img
-                  src={product.images[currentImageIndex] || "/placeholder.svg"}
+                  src={
+                    product.images?.[currentImageIndex] || "/placeholder.svg"
+                  }
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />
@@ -150,7 +169,7 @@ export default function ProductDetailPage({ params }) {
                 )}
 
                 {/* Navigation Arrows */}
-                {product.images.length > 1 && (
+                {product.images?.length > 1 && (
                   <>
                     <button
                       onClick={prevImage}
@@ -168,9 +187,8 @@ export default function ProductDetailPage({ params }) {
                 )}
               </div>
 
-              {/* Thumbnail Gallery */}
               <div className="grid grid-cols-4 gap-4">
-                {product.images.map((image, index) => (
+                {product.images?.map((image, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
@@ -181,7 +199,7 @@ export default function ProductDetailPage({ params }) {
                     }`}
                   >
                     <img
-                      src={image || "/placeholder.svg"}
+                      src={image}
                       alt={`${product.name} ${index + 1}`}
                       className="w-full h-full object-cover"
                     />
@@ -192,96 +210,89 @@ export default function ProductDetailPage({ params }) {
 
             {/* Product Info */}
             <div className="space-y-6">
-              <div>
-                <h1 className="text-4xl font-bold text-foreground mb-2">
-                  {product.name}
-                </h1>
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${
-                          i < Math.floor(product.rating)
-                            ? "fill-accent text-accent"
-                            : "text-muted-foreground"
-                        }`}
-                      />
-                    ))}
-                    <span className="text-sm text-foreground/60 ml-2">
-                      {product.rating} ({product.reviews} reviews)
-                    </span>
-                  </div>
-                </div>
-                <p className="text-3xl font-bold text-primary">
-                  {Number(product.price).toLocaleString("vi-VN")} VNĐ
-                </p>
+              <h1 className="text-4xl font-bold">{product.name}</h1>
+              <div className="flex items-center gap-4 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-4 h-4 ${
+                      i < Math.floor(product.rating)
+                        ? "fill-accent text-accent"
+                        : "text-muted-foreground"
+                    }`}
+                  />
+                ))}
+                <span className="text-sm text-foreground/60 ml-2">
+                  {product.rating} ★
+                </span>
               </div>
+
+              <p className="text-3xl font-bold text-primary">
+                {Number(product.price).toLocaleString("vi-VN")} VNĐ
+              </p>
 
               <p className="text-foreground/70 leading-relaxed">
                 {product.description}
               </p>
 
-              {/* Size Selection */}
-              <div>
-                <label className="block text-sm font-semibold text-foreground mb-3">
-                  Size:{" "}
-                  <span className="font-normal text-foreground/60">
-                    {selectedSize}
-                  </span>
-                </label>
-                <div className="flex gap-2">
-                  {product.sizes.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`px-4 py-2 border-2 rounded-lg transition-all ${
-                        selectedSize === size
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border hover:border-primary"
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
+              {/* Size */}
+              {product.sizes?.length > 0 && (
+                <div>
+                  <label className="block text-sm font-semibold mb-3">
+                    Size: <span className="font-normal">{selectedSize}</span>
+                  </label>
+                  <div className="flex gap-2">
+                    {product.sizes.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => setSelectedSize(size)}
+                        className={`px-4 py-2 border-2 rounded-lg transition-all ${
+                          selectedSize === size
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-border hover:border-primary"
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              {/* Color Selection */}
-              <div>
-                <label className="block text-sm font-semibold text-foreground mb-3">
-                  Color:{" "}
-                  <span className="font-normal text-foreground/60">
-                    {selectedColor}
-                  </span>
-                </label>
-                <div className="flex gap-2">
-                  {product.colors.map((color) => (
-                    <button
-                      key={color}
-                      onClick={() => setSelectedColor(color)}
-                      className={`px-4 py-2 border-2 rounded-lg transition-all ${
-                        selectedColor === color
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border hover:border-primary"
-                      }`}
-                    >
-                      {color}
-                    </button>
-                  ))}
+              {/* Color */}
+              {product.colors?.length > 0 && (
+                <div>
+                  <label className="block text-sm font-semibold mb-3">
+                    Color: <span className="font-normal">{selectedColor}</span>
+                  </label>
+                  <div className="flex gap-2">
+                    {product.colors.map((color) => (
+                      <button
+                        key={color}
+                        onClick={() => setSelectedColor(color)}
+                        className={`px-4 py-2 border-2 rounded-lg transition-all ${
+                          selectedColor === color
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-border hover:border-primary"
+                        }`}
+                      >
+                        {color}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Quantity */}
               <div>
-                <label className="block text-sm font-semibold text-foreground mb-3">
+                <label className="block text-sm font-semibold mb-3">
                   Số lượng
                 </label>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center border-2 border-border rounded-lg">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="px-4 py-2 hover:bg-muted transition-colors"
+                      className="px-4 py-2 hover:bg-muted"
                     >
                       -
                     </button>
@@ -290,7 +301,7 @@ export default function ProductDetailPage({ params }) {
                     </span>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
-                      className="px-4 py-2 hover:bg-muted transition-colors"
+                      className="px-4 py-2 hover:bg-muted"
                     >
                       +
                     </button>
@@ -333,38 +344,7 @@ export default function ProductDetailPage({ params }) {
                 </button>
               </div>
 
-              {/* Product Features */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 border-t border-border">
-                <div className="flex items-start gap-3">
-                  <Truck className="w-5 h-5 text-primary mt-1" />
-                  <div>
-                    <p className="font-semibold text-sm">Free Shipping</p>
-                    <p className="text-xs text-foreground/60">
-                      Đơn hàng trên 2 triệu
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <RotateCcw className="w-5 h-5 text-primary mt-1" />
-                  <div>
-                    <p className="font-semibold text-sm">Easy Returns</p>
-                    <p className="text-xs text-foreground/60">
-                      30 ngày từ khi mua
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Shield className="w-5 h-5 text-primary mt-1" />
-                  <div>
-                    <p className="font-semibold text-sm">Secure Payment</p>
-                    <p className="text-xs text-foreground/60">
-                      Thanh toán an toàn 100%
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Product Details */}
+              {/* Product details */}
               <div className="space-y-4 pt-6 border-t border-border">
                 <h3 className="font-bold text-lg">Chi tiết sản phẩm</h3>
                 <div className="space-y-2 text-sm">
@@ -378,7 +358,9 @@ export default function ProductDetailPage({ params }) {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-foreground/60">Danh mục:</span>
-                    <span className="font-medium">{product.category}</span>
+                    <span className="font-medium">
+                      {product.categories?.join(", ")}
+                    </span>
                   </div>
                 </div>
               </div>
