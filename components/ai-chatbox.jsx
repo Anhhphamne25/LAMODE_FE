@@ -4,31 +4,13 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Bot, User, X, MessageCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export async function POST(req) {
-  const body = await req.json();
-
-  const response = await fetch(
-    "https://research.neu.edu.vn/ollama/v1/chat/completions",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    }
-  );
-
-  const data = await response.json();
-  return Response.json(data);
-}
-
 export default function AIChatbox() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
       role: "assistant",
       content:
-        "Xin chào, tôi là LaMode's AI. Tôi có thể giúp gì cho bạn hôm nay?",
+        "Hello! I'm your AI fashion assistant. How can I help you today?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -56,9 +38,11 @@ export default function AIChatbox() {
 
     try {
       // Call the AI API
-      const response = await fetch("/api/ai", {
+      const response = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           model: "qwen3:8b",
           messages: [...messages, { role: "user", content: userMessage }],
@@ -70,9 +54,36 @@ export default function AIChatbox() {
       }
 
       const data = await response.json();
-      const aiMessage =
+
+      let rawMessage =
         data.choices?.[0]?.message?.content ||
-        "Sorry, I couldn't process that.";
+        "Xin lỗi, tôi chưa có câu trả lời phù hợp.";
+      rawMessage = rawMessage.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+      const fashionKeywords = [
+        "thời trang",
+        "phong cách",
+        "quần áo",
+        "áo",
+        "váy",
+        "LAMODE",
+        "phụ kiện",
+        "phối đồ",
+        "xu hướng",
+        "styling",
+        "outfit",
+      ];
+
+      const isFashionRelated = fashionKeywords.some((kw) =>
+        rawMessage.toLowerCase().includes(kw.toLowerCase())
+      );
+
+      if (!isFashionRelated) {
+        rawMessage =
+          "Xin lỗi, tôi chỉ có thể hỗ trợ về thời trang và sản phẩm của LAMODE. 👗";
+      }
+
+      // 💅 3. Định dạng đầu ra chuẩn LAMODE style
+      const aiMessage = `${rawMessage}`;
 
       // Add AI response to chat
       setMessages((prev) => [
@@ -86,7 +97,7 @@ export default function AIChatbox() {
         {
           role: "assistant",
           content:
-            "Chào bạn tôi là LaMode's AI. Hiện tại tôi không thể trả lời yêu cầu của bạn. Vui lòng thử lại sau.",
+            "Sorry, I'm having trouble connecting right now. Please try again later.",
         },
       ]);
     } finally {
@@ -125,10 +136,8 @@ export default function AIChatbox() {
                 <Bot className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-semibold text-lg">LaMode's AI</h3>
-                <p className="text-xs opacity-90">
-                  Tôi luôn ở đây để giúp đỡ bạn
-                </p>
+                <h3 className="font-semibold text-lg">AI Fashion Assistant</h3>
+                <p className="text-xs opacity-90">Always here to help</p>
               </div>
             </div>
             <button
