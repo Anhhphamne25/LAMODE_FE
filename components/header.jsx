@@ -71,9 +71,12 @@ export default function Header() {
             </div>
 
             {/* Icons */}
-            <button className="p-2 hover:bg-muted rounded-lg transition-all duration-200 hover:scale-110 group">
-              <Search className="w-5 h-5 text-foreground group-hover:text-primary transition-colors" />
-            </button>
+            <Link href="/products">
+              <button className="p-2 hover:bg-muted rounded-lg transition-all duration-200 hover:scale-110 group">
+                <Search className="w-5 h-5 text-foreground group-hover:text-primary transition-colors" />
+              </button>
+            </Link>
+
             <Link
               href="/cart"
               className="p-2 hover:bg-muted rounded-lg transition-all duration-200 hover:scale-110 group relative"
