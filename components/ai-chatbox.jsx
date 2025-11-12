@@ -1,5 +1,6 @@
 "use client";
 
+import ReactMarkdown from "react-markdown";
 import { useState, useRef, useEffect } from "react";
 import { Send, Bot, User, X, MessageCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ export default function AIChatbox() {
     {
       role: "assistant",
       content:
-        "Hello! I'm your AI fashion assistant. How can I help you today?",
+        "Chào bạn! Tôi là LAMODE's AI, trợ lý thời trang thông minh của bạn. Tôi có thể giúp gì cho bạn hôm nay? 👗",
     },
   ]);
   const [input, setInput] = useState("");
@@ -96,8 +97,7 @@ export default function AIChatbox() {
         ...prev,
         {
           role: "assistant",
-          content:
-            "Sorry, I'm having trouble connecting right now. Please try again later.",
+          content: "Xin lỗi, tôi đang gặp sự cố kết nối. Vui lòng thử lại sau.",
         },
       ]);
     } finally {
@@ -136,8 +136,8 @@ export default function AIChatbox() {
                 <Bot className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-semibold text-lg">AI Fashion Assistant</h3>
-                <p className="text-xs opacity-90">Always here to help</p>
+                <h3 className="font-semibold text-lg">LAMODE'S AI</h3>
+                <p className="text-xs opacity-90">Luôn ở đây để giúp đỡ bạn</p>
               </div>
             </div>
             <button
@@ -174,9 +174,18 @@ export default function AIChatbox() {
                       : "bg-card border border-border rounded-tl-sm"
                   }`}
                 >
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                  <ReactMarkdown
+                    components={{
+                      p: ({ node, ...props }) => (
+                        <p
+                          className="text-sm leading-relaxed whitespace-pre-wrap"
+                          {...props}
+                        />
+                      ),
+                    }}
+                  >
                     {message.content}
-                  </p>
+                  </ReactMarkdown>
                 </div>
                 {message.role === "user" && (
                   <div className="bg-accent text-accent-foreground rounded-full p-2 w-8 h-8 flex items-center justify-center flex-shrink-0">
