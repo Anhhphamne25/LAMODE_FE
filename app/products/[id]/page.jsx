@@ -227,9 +227,17 @@ export default function ProductDetailPage({ params }) {
                 </span>
               </div>
 
-              <p className="text-3xl font-bold text-primary">
-                {Number(product.price).toLocaleString("vi-VN")} VNĐ
-              </p>
+              <div className="flex items-center gap-3">
+                {/* Giá gốc (tăng 10%) */}
+                <p className="text-xl text-gray-400 line-through">
+                  {(Number(product.price) * 1.15).toLocaleString("vi-VN")} VNĐ
+                </p>
+
+                {/* Giá hiện tại */}
+                <p className="text-3xl font-bold text-primary">
+                  {Number(product.price).toLocaleString("vi-VN")} VNĐ
+                </p>
+              </div>
 
               <p className="text-foreground/70 leading-relaxed">
                 {product.description}
