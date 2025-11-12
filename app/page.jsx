@@ -1,13 +1,14 @@
-"use client"
+"use client";
 
-import Header from "@/components/header"
-import HeroBanner from "@/components/hero-banner"
-import CategoriesSection from "@/components/categories-section"
-import FeaturedProducts from "@/components/featured-products"
-import PromotionBanner from "@/components/promotion-banner"
-import NewCollection from "@/components/new-collection"
-import BlogSection from "@/components/blog-section"
-import Footer from "@/components/footer"
+import Header from "@/components/header";
+import HeroBanner from "@/components/hero-banner";
+import CategoriesSection from "@/components/categories-section";
+import FeaturedProducts from "@/components/featured-products";
+import PromotionBanner from "@/components/promotion-banner";
+import NewCollection from "@/components/new-collection";
+import BlogSection from "@/components/blog-section";
+import Footer from "@/components/footer";
+import AIChatbox from "@/components/ai-chatbox";
 
 export default function Home() {
   return (
@@ -22,8 +23,8 @@ export default function Home() {
         <NewCollection />
         <BlogSection />
       </main>
-
+      <AIChatbox />
       <Footer />
     </div>
-  )
+  );
 }

@@ -1,52 +1,52 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ArrowRight } from "lucide-react"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import { useState } from "react";
+import { ArrowRight } from "lucide-react";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 
 const mockBlogPosts = [
   {
     id: 1,
-    title: "Fashion Trends 2025: What to Wear This Season",
+    title: "Shop thời trang LAMODE thống lĩnh thị trường",
     excerpt:
-      "Discover the hottest fashion trends for 2025 including bold colors, sustainable materials, and timeless silhouettes that define modern style.",
-    image: "/fashion-trends-2024.jpg",
+      "Gần đây những xu hướng thời trang mới nhất đã xuất hiện, mang đến cho người tiêu dùng nhiều lựa chọn phong cách và sáng tạo hơn bao giờ hết.",
+    image: "/blog1.jpg",
     category: "Fashion Trends",
-    date: "2025-01-20",
-    author: "Emma Style",
-    readTime: 5,
+    date: "November 2025",
+    author: "AhhPam",
+    readTime: 50,
   },
   {
     id: 2,
-    title: "The Rise of Sustainable Fashion",
+    title: "Thời trang bền vững: Đầu tư vào chất lượng thay vì số lượng",
     excerpt:
-      "Learn how ethical fashion and sustainable practices are reshaping the clothing industry and why investing in quality pieces matters.",
-    image: "/sustainable-fashion.jpg",
-    category: "Sustainability",
-    date: "2025-01-15",
-    author: "Sarah Green",
-    readTime: 7,
+      "Tìm hiểu cách xây dựng tủ quần áo bền vững bằng cách chọn những món đồ chất lượng, bền lâu và giảm thiểu lãng phí.",
+    image: "/blog2.jpg",
+    category: "Lifestyle",
+    date: "October 2025",
+    author: "MinToo",
+    readTime: 27,
   },
   {
     id: 3,
-    title: "Complete Styling Guide: From Casual to Formal",
+    title: "Hướng dẫn phong cách tối ưu cho mọi dáng người",
     excerpt:
       "Master the art of styling with our comprehensive guide covering outfit combinations, color coordination, and accessory pairing tips.",
-    image: "/styling-guide.jpg",
+    image: "/blog3.jpg",
     category: "Styling Tips",
-    date: "2025-01-10",
-    author: "Michael Chen",
-    readTime: 8,
+    date: "September 2025",
+    author: "DoMixi",
+    readTime: 800,
   },
   {
     id: 4,
     title: "Luxury Fabrics: Understanding Quality Materials",
     excerpt:
       "Dive deep into the world of premium fabrics. Learn about cashmere, silk, linen, and what makes high-quality materials worth the investment.",
-    image: "/fashion-trends-2024.jpg",
+    image: "/aboutus.jpg",
     category: "Materials",
-    date: "2025-01-05",
+    date: "September 2025",
     author: "Isabella Moore",
     readTime: 6,
   },
@@ -55,31 +55,29 @@ const mockBlogPosts = [
     title: "Wardrobe Essentials: Building Your Capsule Closet",
     excerpt:
       "Create a functional, versatile wardrobe with timeless pieces that work together. Your guide to the perfect capsule collection.",
-    image: "/sustainable-fashion.jpg",
+    image: "/blog2.jpg",
     category: "Wardrobe",
-    date: "2024-12-30",
+    date: "August 2024",
     author: "Emma Style",
     readTime: 9,
   },
-  {
-    id: 6,
-    title: "Color Theory for Fashion: Find Your Perfect Palette",
-    excerpt:
-      "Understand color theory and learn how to choose colors that complement your skin tone and personal style effortlessly.",
-    image: "/styling-guide.jpg",
-    category: "Styling Tips",
-    date: "2024-12-25",
-    author: "James Wilson",
-    readTime: 5,
-  },
-]
+];
 
 export default function BlogPage() {
-  const [selectedCategory, setSelectedCategory] = useState("All")
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const categories = ["All", "Fashion Trends", "Sustainability", "Styling Tips", "Materials", "Wardrobe"]
+  const categories = [
+    "All",
+    "Fashion Trends",
+    "Sustainability",
+    "Styling Tips",
+    "Materials",
+    "Wardrobe",
+  ];
   const filteredPosts =
-    selectedCategory === "All" ? mockBlogPosts : mockBlogPosts.filter((post) => post.category === selectedCategory)
+    selectedCategory === "All"
+      ? mockBlogPosts
+      : mockBlogPosts.filter((post) => post.category === selectedCategory);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -124,17 +122,24 @@ export default function BlogPage() {
                   <span className="inline-block w-fit px-3 py-1 bg-accent text-accent-foreground rounded-full text-sm font-semibold mb-4">
                     {filteredPosts[0].category}
                   </span>
-                  <h2 className="text-3xl font-bold mb-4 text-foreground">{filteredPosts[0].title}</h2>
-                  <p className="text-muted-foreground mb-6 leading-relaxed">{filteredPosts[0].excerpt}</p>
+                  <h2 className="text-3xl font-bold mb-4 text-foreground">
+                    {filteredPosts[0].title}
+                  </h2>
+                  <p className="text-muted-foreground mb-6 leading-relaxed">
+                    {filteredPosts[0].excerpt}
+                  </p>
                   <div className="flex items-center gap-4 mb-6 text-sm text-muted-foreground">
                     <span>{filteredPosts[0].author}</span>
                     <span>•</span>
                     <span>
-                      {new Date(filteredPosts[0].date).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
+                      {new Date(filteredPosts[0].date).toLocaleDateString(
+                        "en-US",
+                        {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        }
+                      )}
                     </span>
                     <span>•</span>
                     <span>{filteredPosts[0].readTime} min read</span>
@@ -157,7 +162,11 @@ export default function BlogPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredPosts.slice(1).map((post, index) => (
-              <div key={post.id} className="scroll-reveal" style={{ animationDelay: `${index * 0.1}s` }}>
+              <div
+                key={post.id}
+                className="scroll-reveal"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
                 <div className="bg-card rounded-lg overflow-hidden border border-border card-lift h-full flex flex-col group transition-all duration-300">
                   {/* Post Image */}
                   <div className="h-48 bg-muted overflow-hidden relative">
@@ -173,10 +182,19 @@ export default function BlogPage() {
                     <span className="inline-block w-fit px-2 py-1 bg-muted text-muted-foreground rounded text-xs font-semibold mb-3">
                       {post.category}
                     </span>
-                    <h3 className="text-lg font-bold mb-3 text-foreground line-clamp-2 flex-1">{post.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{post.excerpt}</p>
+                    <h3 className="text-lg font-bold mb-3 text-foreground line-clamp-2 flex-1">
+                      {post.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                      {post.excerpt}
+                    </p>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
-                      <span>{new Date(post.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
+                      <span>
+                        {new Date(post.date).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </span>
                       <span>•</span>
                       <span>{post.readTime} min</span>
                     </div>
@@ -194,5 +212,5 @@ export default function BlogPage() {
 
       <Footer />
     </div>
-  )
+  );
 }
